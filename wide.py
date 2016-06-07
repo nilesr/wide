@@ -28,7 +28,10 @@ for r in res:
 x = 0
 left_offset = 0
 if len(sys.argv) > 2:
-    left_offset = sys.argv[2]
+    try:
+        left_offset = int(sys.argv[2])
+    except:
+        left_offset = round(0.5 * (image.size[0] - (ires[-1][0] + ires[-1][2])))
 for h in ires:
     print(h)
     #left upper right lower
