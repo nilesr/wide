@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 import subprocess, PIL.Image, sys, os
+tmp = subprocess.check_output(["mktemp", "-d", "/tmp/wide.XXXXXX"]).decode("utf-8").strip()
 res = []
 for line in subprocess.check_output(["xrandr","-q"]).decode("utf-8").split("\n"):
     if " connected" in line:
@@ -36,8 +37,8 @@ for h in ires:
     print(h)
     #left upper right lower
     subimage = image.crop((h[2] + left_offset, h[3], h[2]+h[0] + left_offset, h[3]+h[1]))
-    subimage.save(str(x) + ".png")
+    subimage.save(tmp + "/" + str(x) + ".png")
     print(subimage.size)
     x += 1
 for x in range(len(ires)):
-    subprocess.call(["xfconf-query", "-c", "xfce4-desktop", "-p", "/backdrop/screen0/monitor"+str(x)+"/workspace0/last-image", "-s", os.getcwd() + "/" + str(x) + ".png"])
+    subprocess.call(["xfconf-query", "-c", "xfce4-desktop", "-p", "/backdrop/screen0/monitor"+str(x)+"/workspace0/last-image", "-s", tmp + "/" + str(x) + ".png"])
