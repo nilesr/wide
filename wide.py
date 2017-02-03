@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 import subprocess, PIL.Image, sys, os
 tmp = subprocess.check_output(["mktemp", "-d", "/tmp/wide.XXXXXX"]).decode("utf-8").strip()
 res = []
