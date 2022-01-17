@@ -2,13 +2,17 @@
 import subprocess, PIL.Image, sys, os
 tmp = subprocess.check_output(["mktemp", "-d", "/tmp/wide.XXXXXX"]).decode("utf-8").strip()
 res = []
+monitor_names = []
 for line in subprocess.check_output(["xrandr","-q"]).decode("utf-8").split("\n"):
     if " connected" in line:
         l = line.split()
+        if "normal" in l[2]:
+            continue
         if l[2] == "primary":
             res.append(l[3])
         else:
             res.append(l[2])
+        monitor_names.append(l[0])
 # Debug
 # res = ["1440x900+0+0", "1366x768+1400+376", "1440x900+2806+0"]
 res = [x.replace("+","x").split("x") for x in res]
@@ -41,4 +45,5 @@ for h in ires:
     print(subimage.size)
     x += 1
 for x in range(len(ires)):
-    subprocess.call(["xfconf-query", "-c", "xfce4-desktop", "-p", "/backdrop/screen0/monitor"+str(x)+"/workspace0/last-image", "-s", tmp + "/" + str(x) + ".png"])
+    print(x)
+    subprocess.call(["xfconf-query", "-c", "xfce4-desktop", "-p", "/backdrop/screen0/monitor"+monitor_names[x]+"/workspace0/last-image", "-s", tmp + "/" + str(x) + ".png"])
